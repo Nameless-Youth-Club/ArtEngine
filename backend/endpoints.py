@@ -1,9 +1,16 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 from services.simpleImg import simpleImg
-
+import os
 
 app = Flask(__name__)
+
+
+dirname = os.path.dirname(__file__)
+
+UPLOAD_FOLDER = dirname + '/services/images/'
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 CORS(app)
 
 mySimpleImg = simpleImg("placeHolder")
@@ -26,11 +33,13 @@ def uploadFileRoute():
    if request.method == "GET": 
       return {"programming_languages":list(in_memory_datastore.values())}
    else:
-      image = request.form.get('image')
-      smooth = request.form.get('smooth')
-      block = request.form.get('blockSize')
-      parameters = [image, smooth, block]
-      mySimpleImg.setFilename(image)
-      print(mySimpleImg.convertImagetoSVG())
-      return "FUXK"
+      # # image = request.form.get('image')
+      # # smooth = request.form.get('smooth')
+      # # block = request.form.get('blockSize')
+      # # parameters = [image, smooth, block]
+      # # mySimpleImg.setFilename(image)
+      # # print(mySimpleImg.convertImagetoSVG())
+      # print(request.form.get('image'))
+      mySimpleImg.upload_file(request, app.config)
+      return jsonify({"response" : "inshallah"})
     
