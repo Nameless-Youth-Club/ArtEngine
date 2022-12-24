@@ -4,9 +4,13 @@ import formik from 'formik'
 import React, { useState } from 'react';
 import {useForm} from "react-hook-form"
 import axios from 'axios';
+const parse = require('html-react-parser')
 
 function App() {
   const { register, handleSubmit } = useForm();
+  const [myImage, setMyImage ]  = useState();
+
+
 
   const onSubmit = async (data) => {
       const formData = new FormData();
@@ -18,11 +22,29 @@ function App() {
           method: "POST",
           body: formData,
       }).then((res) => res.json());
-      alert(JSON.stringify({'width': res.data.width}));
+      setMyImage(res.data.image)
+      console.log(myImage)
+      //alert(JSON.stringify({'width': res.data.width}));
   };
+  
+  const styleObj = {
+    flexDirection: 'column',
+    display: 'flex',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+
+ const imageStyle = {
+  height: 100,
+  width: 100,
+  alignItems: 'center'
+
+
+ }
 
   return (
-      <div className="App">
+      <div className="App" style={styleObj}>
           <form onSubmit={handleSubmit(onSubmit)}>
               <input type="file" {...register("file")} />
               <br></br>
@@ -36,6 +58,11 @@ function App() {
               <br></br>
               <input type="submit" />
           </form>
+
+          <div style={imageStyle}>
+            {myImage == null ? "No Image to show": parse(myImage)}
+          </div>
+
       </div>
   );
 }

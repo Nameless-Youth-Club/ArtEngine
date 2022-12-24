@@ -34,6 +34,6 @@ def uploadFileRoute():
       return {"programming_languages":list(in_memory_datastore.values())}
    else:
       mySimpleImg.upload_file(request, app.config)
-      width = mySimpleImg.convertImagetoSVG()
-      return jsonify({"data" : {"width" : width}})
+      image = mySimpleImg.convertImagetoSVG(request)
+      return jsonify({"data" : {"image" : image}})
     

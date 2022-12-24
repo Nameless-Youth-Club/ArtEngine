@@ -38,14 +38,38 @@ class simpleImg:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(config['UPLOAD_FOLDER'], filename))
                 self.setFilename(filename)
-                
-
 
     def setFilename(self, newFilename):
         self.filename = newFilename
 
-    def convertImagetoSVG(self):
+    def convertImagetoSVG(self, request):
         filePath = UPLOAD_FOLDER + self.filename
         myImg = Image.open(filePath, 'r', None)
-        print(myImg.width)
-        return myImg.width
+        pixels = myImg.load()
+        step = request.form.get('blockSize')
+        smooth = request.form.get('smooth')
+
+        svgText = '<svg width="1000" height="1000" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">'
+        width, height = myImg.size
+        x = 0
+        y = 0
+        while y < height:
+            while x < width:
+                r, g, b, a = pixels[x, y]
+                color = f"#{r:02x}{g:02x}{b:02x}"
+                if color != "#ffffff":
+                    newRect = '<rect width="' + str(step) + '" height="' + str(step) + '" x="' + str(x) + '" y="' + str(y) + '" fill="' + color + '"/>\n'
+                    svgText += newRect
+                if (x + int(step) < width):
+                    x += int(step)
+                else:
+                    break
+            x = 0
+            y += int(step)
+        svgText += "</svg>"
+
+        with open("my_file.svg", mode="wt") as f:
+            f.write(svgText)
+
+        return svgText
+
