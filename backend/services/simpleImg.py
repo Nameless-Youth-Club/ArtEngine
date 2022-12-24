@@ -37,11 +37,15 @@ class simpleImg:
             if file and self.allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(config['UPLOAD_FOLDER'], filename))
+                self.setFilename(filename)
+                
 
 
     def setFilename(self, newFilename):
         self.filename = newFilename
 
     def convertImagetoSVG(self):
-        myImg = Image.open(self.filename, 'r', None)
+        filePath = UPLOAD_FOLDER + self.filename
+        myImg = Image.open(filePath, 'r', None)
+        print(myImg.width)
         return myImg.width

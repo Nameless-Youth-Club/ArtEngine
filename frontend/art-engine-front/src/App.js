@@ -18,7 +18,7 @@ function App() {
           method: "POST",
           body: formData,
       }).then((res) => res.json());
-      alert(JSON.stringify({'smooth': res.data.smooth, 'blockSize': res.data.blockSize, 'file': res.data.file}));
+      alert(JSON.stringify({'width': res.data.width}));
   };
 
   return (

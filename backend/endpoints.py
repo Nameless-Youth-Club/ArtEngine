@@ -33,7 +33,7 @@ def uploadFileRoute():
    if request.method == "GET": 
       return {"programming_languages":list(in_memory_datastore.values())}
    else:
-      print(request.form.get('blockSize'))
       mySimpleImg.upload_file(request, app.config)
-      return jsonify({"data" : {"smooth" : request.form.get('smooth'), "blockSize": request.form.get('blockSize')}})
+      width = mySimpleImg.convertImagetoSVG()
+      return jsonify({"data" : {"width" : width}})
     
